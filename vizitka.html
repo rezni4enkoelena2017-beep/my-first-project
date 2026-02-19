@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Елена Боброва</title>
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0ebf8 0%, #e8e2f4 40%, #eee8f6 70%, #f5f0fb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        /* ── Ambient пятна (лавандово-голубые, как акварель) ── */
+        .glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(160, 148, 210, 0.22);
+            top: -200px;
+            left: -150px;
+            animation: driftA 13s ease-in-out infinite;
+        }
+
+        .glow-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(130, 155, 205, 0.18);
+            bottom: -150px;
+            right: -100px;
+            animation: driftB 17s ease-in-out infinite;
+        }
+
+        .glow-3 {
+            width: 280px;
+            height: 280px;
+            background: rgba(180, 180, 205, 0.14);
+            top: 60%;
+            left: 60%;
+            animation: driftA 20s ease-in-out infinite reverse;
+        }
+
+        @keyframes driftA {
+            0%, 100% { transform: translate(0, 0); }
+            50%       { transform: translate(45px, 55px); }
+        }
+        @keyframes driftB {
+            0%, 100% { transform: translate(0, 0); }
+            50%       { transform: translate(-45px, -30px); }
+        }
+
+        /* ── Частицы ── */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: rise linear infinite;
+        }
+
+        @keyframes rise {
+            from { transform: translateY(110vh) translateX(0); opacity: 0; }
+            5%   { opacity: 1; }
+            88%  { opacity: 0.6; }
+            to   { transform: translateY(-10vh) translateX(var(--dx)); opacity: 0; }
+        }
+
+        /* ── Карточка ── */
+        .card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 360px;
+            margin: 20px;
+            background: #ffffff;
+            border: 1px solid rgba(180, 165, 215, 0.3);
+            border-radius: 22px;
+            overflow: hidden;
+            animation: appear 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+            box-shadow:
+                0 8px 32px rgba(110, 90, 160, 0.1),
+                0 24px 64px rgba(110, 90, 160, 0.08),
+                0 1px 0 rgba(255, 255, 255, 0.9) inset;
+        }
+
+        @keyframes appear {
+            from { opacity: 0; transform: translateY(36px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ── Фото-шапка ── */
+        .card-photo-wrap {
+            position: relative;
+            width: 100%;
+            height: 210px;
+            overflow: hidden;
+        }
+
+        .card-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            display: block;
+        }
+
+        /* Плавный переход фото → белое тело карточки */
+        .card-photo-fade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0)    20%,
+                rgba(255, 255, 255, 0.55)  65%,
+                rgba(255, 255, 255, 1)    100%
+            );
+        }
+
+        /* Серебряная разделительная линия */
+        .card-photo-glow {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(180, 180, 205, 0.7) 30%,
+                rgba(210, 210, 228, 0.95) 50%,
+                rgba(180, 180, 205, 0.7) 70%,
+                transparent
+            );
+        }
+
+        /* ── Тело карточки ── */
+        .card-body {
+            padding: 20px 30px 30px;
+            text-align: center;
+        }
+
+        /* ── Имя — серебряный градиент ── */
+        h1 {
+            font-size: clamp(20px, 6vw, 26px);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg,
+                #b8b8cc 0%,
+                #8e8ea8 30%,
+                #d4d4e8 55%,
+                #a0a0bc 80%,
+                #c0c0d4 100%
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 6s ease-in-out infinite, nameGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50%       { background-position: 100% 50%; }
+        }
+
+        @keyframes nameGlow {
+            0%, 100% { filter: drop-shadow(0 1px 4px  rgba(160, 160, 200, 0.35)); }
+            50%       { filter: drop-shadow(0 1px 14px rgba(160, 160, 200, 0.65)); }
+        }
+
+        /* ── Разделитель — золото ── */
+        .sep {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto 13px;
+            width: 68%;
+        }
+
+        .sep-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(170, 170, 200, 0.55), transparent);
+        }
+
+        .sep-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #b0b0c8;
+            box-shadow: 0 0 6px rgba(160, 160, 200, 0.6);
+        }
+
+        /* ── Специализация ── */
+        .spec {
+            color: rgba(70, 60, 95, 0.55);
+            font-size: 12.5px;
+            line-height: 1.75;
+            margin-bottom: 24px;
+            letter-spacing: 0.2px;
+        }
+
+        /* ── Кнопки ── */
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Пыльно-синяя палитра, как ботанические элементы */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 13px 20px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #7a8db8, #5a6e9e, #6d80ab);
+            background-size: 200% 200%;
+            color: #fff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            animation: btnBreath 4s ease-in-out infinite;
+        }
+
+        @keyframes btnBreath {
+            0%, 100% { box-shadow: 0 4px 18px rgba(90, 110, 158, 0.28); }
+            50%       { box-shadow: 0 6px 28px rgba(90, 110, 158, 0.45), 0 0 40px rgba(122, 141, 184, 0.15); }
+        }
+
+        .btn-shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+            transform: skewX(-18deg);
+            animation: btnShine 5s ease-in-out infinite;
+        }
+
+        @keyframes btnShine {
+            0%   { left: -100%; }
+            25%  { left: 160%; }
+            100% { left: 160%; }
+        }
+
+        .btn > * { position: relative; z-index: 1; }
+        .btn span { text-indent: 1.5px; }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 32px rgba(90, 110, 158, 0.4);
+            animation: none;
+        }
+
+        .btn:active { transform: translateY(-1px) scale(0.99); }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(0);
+            animation: rippleEffect 0.7s ease-out forwards;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes rippleEffect {
+            to { transform: scale(5); opacity: 0; }
+        }
+
+        /* ── Адаптив ── */
+        @media (max-width: 440px) {
+            .card-body { padding: 18px 20px 26px; }
+            .card-photo-wrap { height: 185px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="card">
+
+        <!-- Фото-шапка -->
+        <div class="card-photo-wrap">
+            <img src="photo.jpg" class="card-photo" alt="Елена Боброва">
+            <div class="card-photo-fade"></div>
+            <div class="card-photo-glow"></div>
+        </div>
+
+        <!-- Контент -->
+        <div class="card-body">
+
+            <h1>Елена Боброва</h1>
+
+            <div class="sep">
+                <div class="sep-line"></div>
+                <div class="sep-dot"></div>
+                <div class="sep-line"></div>
+            </div>
+
+            <p class="spec">Создаю автоматизированные<br>системы в МЛМ</p>
+
+            <div class="buttons">
+
+                <a href="https://t.me/el_bobrovaIsystem" class="btn" target="_blank" rel="noopener noreferrer">
+                    <div class="btn-shine"></div>
+                    <span>Мой канал</span>
+                </a>
+
+                <a href="https://t.me/el_bobrova" class="btn" target="_blank" rel="noopener noreferrer" id="mainBtn">
+                    <div class="btn-shine"></div>
+                    <span>Написать мне</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Частицы — лавандово-голубые и золотые
+        const container = document.getElementById('particles');
+        const colors = [
+            'rgba(160,148,210,',
+            'rgba(130,155,200,',
+            'rgba(180,180,210,'
+        ];
+
+        for (let i = 0; i < 22; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size    = 1 + Math.random() * 2;
+            const color   = colors[Math.floor(Math.random() * colors.length)];
+            const opacity = 0.15 + Math.random() * 0.3;
+            p.style.cssText = [
+                `left: ${Math.random() * 100}%`,
+                `bottom: -10px`,
+                `width: ${size}px`,
+                `height: ${size}px`,
+                `background: ${color}${opacity})`,
+                `--dx: ${(Math.random() - 0.5) * 140}px`,
+                `animation-duration: ${10 + Math.random() * 14}s`,
+                `animation-delay: -${Math.random() * 24}s`
+            ].join(';');
+            container.appendChild(p);
+        }
+
+        // Ripple на обеих кнопках
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                const rect   = this.getBoundingClientRect();
+                const size   = Math.max(rect.width, rect.height);
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                ripple.style.cssText = [
+                    `width: ${size}px`,
+                    `height: ${size}px`,
+                    `left: ${e.clientX - rect.left - size / 2}px`,
+                    `top: ${e.clientY - rect.top  - size / 2}px`
+                ].join(';');
+                this.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove());
+            });
+        });
+    </script>
+</body>
+</html>

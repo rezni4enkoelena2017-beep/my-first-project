@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Партнёрство без вложений — узнайте, ваш ли это путь</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #06040f;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ── Фоновые свечения ── */
+        .bg {
+            position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+        }
+        .bg-spot {
+            position: absolute; border-radius: 50%; filter: blur(120px);
+        }
+        .bg-spot-1 {
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(139,92,246,0.28), transparent 70%);
+            top: -200px; left: -200px;
+            animation: drift1 18s ease-in-out infinite;
+        }
+        .bg-spot-2 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.22), transparent 70%);
+            bottom: -150px; right: -150px;
+            animation: drift2 22s ease-in-out infinite;
+        }
+        .bg-spot-3 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(6,182,212,0.14), transparent 70%);
+            top: 40%; left: 55%;
+            animation: drift1 28s ease-in-out infinite reverse;
+        }
+        @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,70px)} }
+        @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-60px,-50px)} }
+
+        /* ── Сетка фона ── */
+        .bg-grid {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* ── Частицы ── */
+        .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+        .particle  { position: absolute; border-radius: 50%; animation: rise linear infinite; }
+        @keyframes rise {
+            from { transform: translateY(110vh) translateX(0); opacity: 0; }
+            5%   { opacity: 1; } 88% { opacity: 0.7; }
+            to   { transform: translateY(-10vh) translateX(var(--dx)); opacity: 0; }
+        }
+
+        /* ── Обёртка ── */
+        .wrapper {
+            position: relative; z-index: 2;
+            max-width: 640px; margin: 0 auto;
+            padding: 48px 20px 80px;
+        }
+
+        /* ── Стеклянная карточка ── */
+        .card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 36px 32px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+            animation: fadeUp 0.7s ease-out both;
+        }
+        .card:nth-child(2) { animation-delay: 0.1s; }
+        .card:nth-child(3) { animation-delay: 0.2s; }
+        .card:nth-child(4) { animation-delay: 0.3s; }
+        .card:nth-child(5) { animation-delay: 0.4s; }
+        .card:nth-child(6) { animation-delay: 0.5s; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 56px 32px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.12), transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 7px 18px; border-radius: 50px;
+            background: rgba(139,92,246,0.15);
+            border: 1px solid rgba(139,92,246,0.35);
+            color: #a78bfa; font-size: 12px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+        .hero-tag-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #a78bfa;
+            box-shadow: 0 0 8px #a78bfa;
+            animation: blink 2s ease-in-out infinite;
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        .hero-title {
+            font-size: clamp(28px, 7vw, 46px);
+            font-weight: 900; line-height: 1.1;
+            letter-spacing: -1px; margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, #e0d7ff 35%, #93c5fd 65%, #fff 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: shimmer 5s ease-in-out infinite;
+        }
+        @keyframes shimmer { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+        .hero-sub {
+            font-size: 16px; color: rgba(255,255,255,0.55);
+            line-height: 1.75; margin-bottom: 12px;
+            max-width: 480px; margin-left: auto; margin-right: auto;
+        }
+        .hero-note {
+            font-size: 13px; color: rgba(139,92,246,0.8);
+            margin-bottom: 36px; font-weight: 500;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .hero-note::before, .hero-note::after {
+            content: ''; width: 24px; height: 1px;
+            background: rgba(139,92,246,0.4);
+        }
+
+        /* ── Заголовок секции ── */
+        .section-title {
+            font-size: 11px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: #8b5cf6;
+            margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::before {
+            content: ''; width: 20px; height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+            border-radius: 2px;
+        }
+
+        .section-heading {
+            font-size: clamp(20px, 4vw, 26px);
+            font-weight: 800; color: #fff;
+            line-height: 1.2; margin-bottom: 24px;
+        }
+
+        /* ── Боли ── */
+        .pain-list { display: flex; flex-direction: column; gap: 12px; }
+        .pain-item {
+            display: flex; align-items: flex-start; gap: 14px;
+            padding: 16px 18px; border-radius: 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .pain-item:hover {
+            background: rgba(139,92,246,0.07);
+            border-color: rgba(139,92,246,0.25);
+        }
+        .pain-icon {
+            width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
+            background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(59,130,246,0.15));
+            border: 1px solid rgba(139,92,246,0.2);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pain-icon svg { width: 18px; height: 18px; }
+        .pain-item p { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.6; padding-top: 7px; }
+        .pain-item strong { color: #fff; font-weight: 600; }
+
+        /* ── Шаги ── */
+        .steps { display: flex; flex-direction: column; }
+        .step {
+            display: flex; gap: 18px; padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .step:last-child { border-bottom: none; padding-bottom: 0; }
+        .step-num {
+            width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: #fff; font-size: 15px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 16px rgba(139,92,246,0.4);
+            position: relative; z-index: 1;
+        }
+        .step-body h3 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .step-body p  { font-size: 13.5px; color: rgba(255,255,255,0.5); line-height: 1.65; }
+
+        /* ── Что получаете ── */
+        .gets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .get-card {
+            padding: 22px 18px; border-radius: 16px; text-align: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+            position: relative; overflow: hidden;
+        }
+        .get-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(59,130,246,0.05));
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .get-card:hover { transform: translateY(-3px); border-color: rgba(139,92,246,0.3); }
+        .get-card:hover::before { opacity: 1; }
+        .get-card svg  { width: 32px; height: 32px; margin-bottom: 12px; position: relative; z-index: 1; }
+        .get-card p    { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); line-height: 1.45; position: relative; z-index: 1; }
+
+        /* ── Для кого ── */
+        .check-list { display: flex; flex-direction: column; gap: 14px; }
+        .check-item {
+            display: flex; align-items: flex-start; gap: 14px;
+            font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6;
+        }
+        .check-dot {
+            width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 12px rgba(139,92,246,0.45);
+        }
+        .check-dot svg { width: 12px; height: 12px; }
+        .check-item strong { color: #fff; font-weight: 600; }
+
+        /* ── Финальный CTA ── */
+        .cta-section {
+            text-align: center; padding: 52px 32px 44px;
+            position: relative; overflow: hidden;
+        }
+        .cta-section::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 100%, rgba(139,92,246,0.15), transparent 65%);
+            pointer-events: none;
+        }
+        .cta-icon {
+            width: 64px; height: 64px; border-radius: 20px; margin: 0 auto 20px;
+            background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(59,130,246,0.2));
+            border: 1px solid rgba(139,92,246,0.3);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px rgba(139,92,246,0.2);
+        }
+        .cta-icon svg { width: 32px; height: 32px; }
+        .cta-title {
+            font-size: clamp(22px, 5.5vw, 30px);
+            font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 12px;
+        }
+        .cta-sub {
+            font-size: 15px; color: rgba(255,255,255,0.5);
+            line-height: 1.7; margin-bottom: 32px;
+            max-width: 420px; margin-left: auto; margin-right: auto;
+        }
+
+        /* ── Кнопка ── */
+        .btn-cta {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 10px; padding: 16px 48px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: #fff; text-decoration: none;
+            font-size: 16px; font-weight: 700; letter-spacing: 0.4px;
+            white-space: nowrap; position: relative; overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+            animation: ctaPulse 2.5s ease-in-out infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes ctaPulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(139,92,246,0), 0 6px 24px rgba(139,92,246,0.35); }
+            50%      { box-shadow: 0 0 0 12px rgba(139,92,246,0.1), 0 8px 32px rgba(139,92,246,0.55); }
+        }
+        .btn-shine {
+            position: absolute; top: 0; left: -100%;
+            width: 55%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-18deg);
+            animation: btnShine 4s ease-in-out infinite;
+        }
+        @keyframes btnShine { 0%{left:-100%} 26%{left:160%} 100%{left:160%} }
+        .btn-cta > * { position: relative; z-index: 1; }
+        .btn-cta:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 16px 48px rgba(139,92,246,0.55);
+            animation: none;
+        }
+        .btn-cta:active { transform: translateY(-1px) scale(0.99); }
+
+        .cta-link {
+            display: block; font-size: 13px;
+            color: rgba(139,92,246,0.65); text-decoration: none; transition: color 0.2s;
+        }
+        .cta-link:hover { color: #a78bfa; }
+
+        /* Ripple */
+        .ripple {
+            position: absolute; border-radius: 50%;
+            background: rgba(255,255,255,0.22); transform: scale(0);
+            animation: rippleAnim 0.7s ease-out forwards; pointer-events: none; z-index: 0;
+        }
+        @keyframes rippleAnim { to { transform: scale(5); opacity: 0; } }
+
+        /* ── Адаптив ── */
+        @media (max-width: 480px) {
+            .wrapper { padding: 28px 14px 60px; }
+            .card { padding: 28px 20px; }
+            .hero { padding: 40px 20px 36px; }
+            .cta-section { padding: 40px 20px 36px; }
+            .gets-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg">
+    <div class="bg-spot bg-spot-1"></div>
+    <div class="bg-spot bg-spot-2"></div>
+    <div class="bg-spot bg-spot-3"></div>
+</div>
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+
+<div class="wrapper">
+
+    <!-- ── Hero ── -->
+    <div class="card hero">
+        <div class="hero-tag">
+            <div class="hero-tag-dot"></div>
+            Бесплатная диагностика
+        </div>
+
+        <h1 class="hero-title">Подходит ли вам<br>партнёрство<br>без вложений?</h1>
+
+        <p class="hero-sub">
+            Пройдите короткий квиз — и узнайте честно,
+            прежде чем принимать какие-либо решения.
+            Без давления, без навязывания, без обязательств.
+        </p>
+
+        <div class="hero-note">3 минуты — и вы знаете свой ответ</div>
+
+        <a href="https://t.me/el_bobrova" class="btn-cta" target="_blank" rel="noopener noreferrer">
+            <div class="btn-shine"></div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Пройти диагностику</span>
+        </a>
+        <a href="https://t.me/el_bobrova" class="cta-link" target="_blank" rel="noopener noreferrer">t.me/el_bobrova</a>
+    </div>
+
+    <!-- ── Узнаёте себя ── -->
+    <div class="card">
+        <div class="section-title">Это про вас?</div>
+        <div class="section-heading">Узнаёте себя?</div>
+        <div class="pain-list">
+
+            <div class="pain-item">
+                <div class="pain-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9" stroke="#a78bfa" stroke-width="1.7"/>
+                        <path d="M12 8V13" stroke="#a78bfa" stroke-width="1.7" stroke-linecap="round"/>
+                        <circle cx="12" cy="16" r="0.8" fill="#a78bfa"/>
+                    </svg>
+                </div>
+                <p><strong>Хочется зарабатывать больше</strong>, но нет денег на старт и непонятно, с чего начать</p>
+            </div>
+
+            <div class="pain-item">
+                <div class="pain-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                              stroke="#a78bfa" stroke-width="1.7" stroke-linejoin="round"/>
+                        <path d="M12 9V13M12 17h.01" stroke="#a78bfa" stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <p><strong>Видели похожие предложения</strong> — обещали горы, а в итоге разочарование и недоверие</p>
+            </div>
+
+            <div class="pain-item">
+                <div class="pain-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="#a78bfa" stroke-width="1.7" stroke-linecap="round"/>
+                        <circle cx="12" cy="12" r="9" stroke="#a78bfa" stroke-width="1.7"/>
+                        <circle cx="12" cy="17" r="0.8" fill="#a78bfa"/>
+                    </svg>
+                </div>
+                <p><strong>Интересно, но страшно</strong> — непонятно, реально ли это работает именно для вас</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── Как работает ── -->
+    <div class="card">
+        <div class="section-title">Без сюрпризов</div>
+        <div class="section-heading">Как работает квиз</div>
+        <div class="steps">
+
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <h3>Отвечаете на несколько честных вопросов</h3>
+                    <p>Никаких личных данных, никаких ловушек. Только вопросы про ваши цели, ритм жизни и ожидания.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <h3>Узнаёте, как реально устроено партнёрство</h3>
+                    <p>Откуда берётся доход, что нужно делать, чего ждать — всё прозрачно, без прикрас и пустых обещаний.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <h3>Принимаете решение сами — без давления</h3>
+                    <p>Квиз не продаёт. Он помогает понять, ваш ли это путь. Регистрация — только ваш осознанный выбор.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── Что получите ── -->
+    <div class="card">
+        <div class="section-title">Ваша выгода</div>
+        <div class="section-heading">Что вы получаете</div>
+        <div class="gets-grid">
+
+            <div class="get-card">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L4 6V12C4 16.4 7.4 20.5 12 22C16.6 20.5 20 16.4 20 12V6L12 2Z"
+                          stroke="#a78bfa" stroke-width="1.7" stroke-linejoin="round"/>
+                    <path d="M9 12L11 14L15 10" stroke="#a78bfa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p>Ясность без риска и вложений</p>
+            </div>
+
+            <div class="get-card">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#60a5fa" stroke-width="1.7"/>
+                    <path d="M12 7V12L15 15" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+                <p>3 минуты вместо недель сомнений</p>
+            </div>
+
+            <div class="get-card">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                          stroke="#a78bfa" stroke-width="1.7" stroke-linejoin="round"/>
+                </svg>
+                <p>Честные ответы на вопросы, которые боялись задать</p>
+            </div>
+
+            <div class="get-card">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"
+                          stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p>Точку старта — если подходит, сразу знаете следующий шаг</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── Для кого ── -->
+    <div class="card">
+        <div class="section-title">Портрет кандидата</div>
+        <div class="section-heading">Для кого это</div>
+        <div class="check-list">
+
+            <div class="check-item">
+                <div class="check-dot">
+                    <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span>Вы хотите <strong>дополнительный доход</strong> — но стартовый капитал не ваш вариант</span>
+            </div>
+
+            <div class="check-item">
+                <div class="check-dot">
+                    <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span>Вам важна <strong>гибкость</strong> — работать когда удобно, из любой точки мира</span>
+            </div>
+
+            <div class="check-item">
+                <div class="check-dot">
+                    <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span>Вы <strong>устали от пустых обещаний</strong> — хотите сначала разобраться, потом решать</span>
+            </div>
+
+            <div class="check-item">
+                <div class="check-dot">
+                    <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span>Вы готовы <strong>действовать</strong> — понимаете, что результат зависит от вас, а не от удачи</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── Финальный CTA ── -->
+    <div class="card cta-section">
+        <div class="cta-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                      stroke="#a78bfa" stroke-width="1.5" stroke-linejoin="round" fill="rgba(139,92,246,0.15)"/>
+            </svg>
+        </div>
+
+        <div class="cta-title">Один квиз —<br>и вы точно знаете ответ</div>
+        <div class="cta-sub">
+            Не нужно ничего решать прямо сейчас.
+            Просто пройдите диагностику — получите честную картину
+            и сами поймёте, ваш ли это путь.
+        </div>
+
+        <a href="https://t.me/el_bobrova" class="btn-cta" target="_blank" rel="noopener noreferrer">
+            <div class="btn-shine"></div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Узнать прямо сейчас</span>
+        </a>
+        <a href="https://t.me/el_bobrova" class="cta-link" target="_blank" rel="noopener noreferrer">t.me/el_bobrova</a>
+    </div>
+
+</div>
+
+<script>
+    const container = document.getElementById('particles');
+    const colors = ['rgba(139,92,246,', 'rgba(59,130,246,', 'rgba(167,139,250,', 'rgba(6,182,212,'];
+    for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = 1 + Math.random() * 2.5;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const opacity = 0.15 + Math.random() * 0.35;
+        p.style.cssText = [
+            `left: ${Math.random() * 100}%`, `bottom: -10px`,
+            `width: ${size}px`, `height: ${size}px`,
+            `background: ${color}${opacity})`,
+            `--dx: ${(Math.random() - 0.5) * 160}px`,
+            `animation-duration: ${8 + Math.random() * 14}s`,
+            `animation-delay: -${Math.random() * 22}s`
+        ].join(';');
+        container.appendChild(p);
+    }
+
+    document.querySelectorAll('.btn-cta').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const r = document.createElement('div');
+            r.className = 'ripple';
+            r.style.cssText = [
+                `width:${size}px`, `height:${size}px`,
+                `left:${e.clientX - rect.left - size/2}px`,
+                `top:${e.clientY - rect.top - size/2}px`
+            ].join(';');
+            this.appendChild(r);
+            r.addEventListener('animationend', () => r.remove());
+        });
+    });
+</script>
+</body>
+</html>
